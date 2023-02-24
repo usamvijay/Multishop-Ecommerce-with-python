@@ -1,0 +1,67 @@
+{% load static %}
+{% include 'Site/header.html' %}
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="#">Home</a>
+                    <span class="breadcrumb-item active">Register</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Checkout Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-3">
+            </div>
+            <div class="col-lg-5">
+                {% for msg in  messages%}
+                <div class="alert alert-danger">{{ msg}}</div>
+                {% endfor %}
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Register Here</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <form method="POST" action="/site/User_Registration/">
+                        {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label>First Name</label>
+                            <input class="form-control" name="fristname" type="text" placeholder="John">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" name="lastname" type="text" placeholder="Doe">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" name="email" type="email" placeholder="example@email.com">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" name="mobile" type="number" placeholder="+123 456 789">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>Password</label>
+                            <input class="form-control" name="password" type="password" placeholder="Password">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label>Re-type Password</label>
+                            <input class="form-control" name='Cpassword' type="password" placeholder="Confirm Password">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button  class="form-control btn btn-warning" type="submit">Register Now</button>
+                        </div>
+                    </div>
+                </form>
+                </div> 
+            </div>
+            <div class="col-lg-3">
+            </div>
+        </div>
+    </div>
+    <!-- Checkout End -->
+
+{% include 'Site/footer.html' %}
