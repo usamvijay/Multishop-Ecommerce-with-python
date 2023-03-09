@@ -1,6 +1,8 @@
+import random
+from urllib import request
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import Categories, Products, User_data, Cart
+from .models import Categories, Orders, Products, User_data, Cart
 from SiteApp import models
 from six import ensure_binary
 from hashlib import md5
@@ -150,3 +152,45 @@ def delete_cart_item(request, id):
         return HttpResponseRedirect('/site/Cart')
     else:
         return HttpResponseRedirect('/site/User_Login')
+
+
+def Add_User_address():
+    if isAlreadyLogin(request):
+        if request.method == 'POST':
+            User    = request.session['User_email']
+            User    = User_data.objects.get(email = User)
+            User_id = User.id
+            address = models.User_address()
+            address.User      = User_id
+            address.firstname = request.POST['firstname']
+            address.lastname  = request.POST['lastname']
+            address.email     = request.POST['email']
+            address.mobile    = request.POST['mobile']
+            address.address   = request.POST['address']
+            address.city      = request.POST['city']
+            address.state     = request.POST['state']
+            address.pincode   = request.POST['pincode']
+            orderId ='PV'+str(random.randint(111111, 999999999999))
+
+            while Orders.object.filter(Order_id = orderId) is None:
+                orderId ='PV'+str(random.randint(111111, 999999999999))
+            address.order_id = orderId
+            address.save()
+            cart = Cart.objects.filter( User = User_id)
+            for Item in cart:
+                Orders.objects.create(
+                    user        = User_id,
+                    Product     = Item.Product,
+                    Quantity    = Item.Quantity,
+                    Color       =  Item.Color,
+                    Cart_price  = Item.Cart_pric,
+                    Cart_total_price    =   Item.art_total_price,
+                    Order_id    = orderId 
+                )
+                order_item = Products.objects.filter(id = Item.Product_id).first()
+                order_item.Quantity = order_item.Quantity - Item.Quantity
+                order_item.save()
+
+                Cart.objects.filter(User = User_id).delete()
+
+        return HttpResponseRedirect('/site/Cart')
